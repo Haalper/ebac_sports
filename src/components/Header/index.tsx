@@ -1,17 +1,21 @@
+import React from 'react'
+import { useSelector } from 'react-redux'
 import * as S from './styles'
-
 import { Produto } from '../../App'
-
 import cesta from '../../assets/cesta.png'
 import { paraReal } from '../Produto'
+import { RootState } from '../../store' // Alterado para RootState
 
 type Props = {
-  itensNoCarrinho: Produto[]
   favoritos: Produto[]
 }
 
-const Header = ({ itensNoCarrinho, favoritos }: Props) => {
-  const valorTotal = itensNoCarrinho.reduce((acc, item) => {
+const Header = ({ favoritos }: Props) => {
+  // Corrigindo o tipo de estado da store para RootState
+  const itens = useSelector((state: RootState) => state.carrinho.itens)
+
+  // Adicionando tipos explícitos aos parâmetros acc e item
+  const valorTotal = itens.reduce((acc: number, item: Produto) => {
     acc += item.preco
     return acc
   }, 0)
@@ -21,9 +25,9 @@ const Header = ({ itensNoCarrinho, favoritos }: Props) => {
       <h1>EBAC Sports</h1>
       <div>
         <span>{favoritos.length} favoritos</span>
-        <img src={cesta} />
+        <img src={cesta} alt="Cesta de compras" />
         <span>
-          {itensNoCarrinho.length} itens, valor total: {paraReal(valorTotal)}
+          {itens.length} itens, valor total: {paraReal(valorTotal)}
         </span>
       </div>
     </S.Header>
